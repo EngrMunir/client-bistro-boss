@@ -1,7 +1,7 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Cover from '../../../Shared/Cover/Cover';
-import orderCoverImg from '../../../assets/shop/order.jpg'
+import orderCoverImg from '../../../assets/shop/order.jpg';
 import { useState } from 'react';
 import useMenu from '../../../hooks/useMenu';
 import OrderTab from '../OrderTab/OrderTab';
@@ -37,19 +37,19 @@ const Order = () => {
                     <Tab>Drinks</Tab>
                     </TabList>
                     <TabPanel>
-                      <OrderTab items={salad}></OrderTab>
+                        <OrderTab items={salad}></OrderTab>
                     </TabPanel>
                     <TabPanel>
-                    <OrderTab items={pizza}></OrderTab>
+                        <OrderTab items={pizza}></OrderTab>
                     </TabPanel>
                     <TabPanel>
-                    <OrderTab items={soup}></OrderTab>
+                        <OrderTab items={soup}></OrderTab>
                     </TabPanel>
                     <TabPanel>
-                    <OrderTab items={desserts}></OrderTab>
+                        <OrderTab items={desserts}></OrderTab>
                     </TabPanel>
                     <TabPanel>
-                    <OrderTab items={drinks}></OrderTab>
+                        <OrderTab items={drinks}></OrderTab>
                     </TabPanel>
             </Tabs>
         </div>
