@@ -3,11 +3,15 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../Providers/AuthProvider";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../Components/SocialLogin/SocialLogin";
 
 const SignUp = () => {
-    const { register, handleSubmit, formState: { errors }} = useForm();
-    const { createUser } = useContext(AuthContext);
+    const axiosPublic = useAxiosPublic();
+    const { register, handleSubmit, reset, formState: { errors }} = useForm();
+    const { updateUserProfile, createUser, logOut } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const onSubmit = data =>{
         console.log(data)
@@ -15,7 +19,32 @@ const SignUp = () => {
         .then(result => {
             const loggedUser = result.user;
             console.log(loggedUser);
-            Swal.fire("Signup successful");
+            updateUserProfile(data.name, data.photo)
+            .then(() => {
+                // create user entry successfully
+                const userInfo = {
+                    name: data.name,
+                    email: data.email
+                }
+                axiosPublic.post('/users', userInfo)
+                .then(res => {
+                    if(res.data.insertedId){
+                        console.log('user added to the database')
+                        reset()
+                        Swal.fire({
+                            position:'top-end',
+                            icon:'success',
+                            title:'User created successfully',
+                            showConfirmButton:false,
+                            timer: 1500
+                        });
+                        navigate('/');
+                    }
+                })
+                
+            })
+            .catch(error => console.log(error))
+            
         })
     }
     return (
@@ -37,6 +66,15 @@ const SignUp = () => {
                         <input type="text" {...register('name', {required:true})} placeholder="Name" className="input input-bordered" required />
                         {
                             errors.name && <span className="text-red-500">Name is required</span>
+                        }
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Photo URL</span>
+                        </label>
+                        <input type="text" {...register('photo', {required:true})} placeholder="Photo URL" className="input input-bordered" required />
+                        {
+                            errors.photo && <span className="text-red-500">Photo URL is required</span>
                         }
                     </div>
                     <div className="form-control">
@@ -74,6 +112,7 @@ const SignUp = () => {
                     </div>
                 </form>
                 <p className="text-center mb-5"><small>Already Registered? Please <Link to="/login"><span className="text-blue-500">Login</span></Link></small></p>
+                <SocialLogin></SocialLogin>
             </div>
         </div>
     </div>
